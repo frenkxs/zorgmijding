@@ -1,0 +1,39 @@
+Package: zorgmijding
+Title: Calculates GP contact rate for cardiovascular complaints in five
+    Dutch regions
+Version: 0.0.0.9000
+Authors@R: 
+    person("Premysl", "Velek", , "p.velek@erasmusmc.nl", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-8548-6211"))
+Description: The package works with data from GP registration databases
+    managed by University Medical Centres in the Netherlands.  The package
+    is part of the Zorgmijding project funded by ZonMw and is intended for
+    internal purposes only.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    anytime,
+    clock,
+    colorspace,
+    dplyr,
+    fs,
+    ggplot2,
+    lubridate,
+    magrittr,
+    purrr,
+    stats,
+    svDialogs,
+    tcltk,
+    tidyr,
+    vroom
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
