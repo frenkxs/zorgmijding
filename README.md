@@ -37,14 +37,13 @@ Then you can download and install the zorgmijding package.
 ```
 if (!require(devtools)) install.packages(“devtools”)
 devtools::install_github("frenkxs/zorgmijding")
-
 ```
 If - for any reasons - this fails, install the package using a local file. In this case, you 
 have to save the 'tar.gz' file in your computer and then specify a path to the folder in which you
 saved it:
+
 ```
 devtools::install_local("/path/to/folder/zorgmijding_0.0.0.9000.tar.gz", dependencies = TRUE)
-
 ```
 
 After installing, you load it into R:

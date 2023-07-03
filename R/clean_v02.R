@@ -35,6 +35,28 @@
 #' eligible contact types will be considered, based on the 'Contactsoort' variable. You
 #' can access the list of eligible contact types by data("consult_contact")
 #' @param age_groups Definition of age groups stratification by age.
+#'
+#' @param col_visits Vector with the names of columns in the visits table in the order in which
+#' they occur in the table. Use the term below for select variables (on the left hand side is the
+#' original variable name, on the right hand side to one to be used):
+#'
+#' - pat: pat_id
+#' - contactid: contact_id
+#' - contactd: contact_date
+#' - cod: ICPC
+#'
+#' @param col_pats Vector with the names of columns in the patients table in the order in which
+#' they occur in the table. Use the term below for select variables (on the left hand side is the
+#' original variable name, on the right hand side to one to be used):
+#'
+#' - pat: pat_id
+#' - Gender: sex
+#' - patbird: pat_dob
+#' - Datum_laatste_extractie: fu_end
+#' - Inschrijfdatum: fu_start
+#' - Praktijk_id: prak_id
+#' - Uischrijfdatum: dereg_date
+
 
 #' @export
 clean_data_v02 <- function(umc = c(
@@ -42,7 +64,13 @@ clean_data_v02 <- function(umc = c(
                              "groningen", "rotterdam"
                            ),
                            clean_types = FALSE,
-                           age_groups = c("0-19", "20-39", "40-59", "60-79", "80+")) {
+                           age_groups = c("0-19", "20-39", "40-59", "60-79", "80+"),
+                           col_visits = c("pat_id", "sex", "patbird", "prakid", "Hisnaam",
+                                          "contact_id", "contact_date", "Soepcode",
+                                          "Contactsoort", "icpc"),
+                           col_pats = c("pat_id", "sex", "pat_dob", "fu_end", "fu_start",
+                               "prak_id", "dereg_date")
+                           ) {
   # Preliminaries ---------------------------------------
   umc <- match.arg(umc)
 
@@ -73,10 +101,8 @@ clean_data_v02 <- function(umc = c(
 
   # Change column names: visits --------------------------------------
   if (umc %in% c("utrecht", "maastricht", "amsterdam", "groningen")) {
-    columns_visits <- c(
-      "pat_id", "sex", "patbird", "prakid", "Hisnaam", "contact_id", "contact_date",
-      "Soepcode", "Contactsoort", "icpc"
-    )
+    columns_visits <- col_visits
+
     columns_visits_select <- c(
       "pat_id", "contact_id", "contact_date", "Contactsoort", "icpc"
     )
@@ -93,14 +119,9 @@ clean_data_v02 <- function(umc = c(
 
   # Change column names: patients --------------------------------------
   if (umc %in% c("utrecht", "maastricht", "amsterdam", "groningen")) {
-    columns_patients <- c(
-      "pat_id", "sex", "pat_dob", "fu_end", "fu_start",
-      "prak_id", "dereg_date"
-    )
-    columns_patients_select <- c(
-      "pat_id", "sex", "pat_dob", "fu_end", "fu_start",
-      "prak_id", "dereg_date"
-    )
+    columns_patients <- col_pats
+    columns_patients_select <- col_pats
+
   } else if (umc == "rotterdam") {
     columns_patients <- c(
       "prak_id", "pat_id", "pat_dob", "patdead", "sex",
