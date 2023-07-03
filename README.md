@@ -1,4 +1,4 @@
-# Introduction
+# The zorgmijding package
 
 This package takes calculates and plots GP contact rate for
 cardiovascular complaints before and during the COVID-19 pandemic. It
@@ -7,7 +7,7 @@ ONLY with data exported form GP registration databases managed by five
 University Medical Centres in the Netherlands (EMC Rotterdam, UMC
 Utrecht, UMC Amsterdam, UMC Mastricht and UMC Gronningen).
 
-# Using the package
+## Using the package
 
 There are four different functions in the package, covering the entire
 pipeline from cleaning the raw data to plotting the final results. Those
@@ -28,7 +28,26 @@ functions and all functions (except `plot_visit`) store their output on
 your computer. For example, you can run the `n_visit` using the output
 form the `clean` and `denominators` that is stored on your computer.
 
-To use the package, first install it and load it onto R:
+
+## Installation
+
+Install the package  you first need to make sure the 'devtools' package is installed. 
+Then you can download and install the zorgmijding package.
+
+```
+if (!require(devtools)) install.packages(“devtools”)
+devtools::install_github("frenkxs/zorgmijding")
+
+```
+If - for any reasons - this fails, install the package using a local file. In this case, you 
+have to save the 'tar.gz' file in your computer and then specify a path to the folder in which you
+saved it:
+```
+devtools::install_local("/path/to/folder/zorgmijding_0.0.0.9000.tar.gz", dependencies = TRUE)
+
+```
+
+After installing, you load it into R:
 
 ```
 library(zorgmijding)
