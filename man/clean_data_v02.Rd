@@ -7,7 +7,10 @@
 clean_data_v02(
   umc = c("utrecht", "maastricht", "amsterdam", "groningen", "rotterdam"),
   clean_types = FALSE,
-  age_groups = c("0-19", "20-39", "40-59", "60-79", "80+")
+  age_groups = c("0-19", "20-39", "40-59", "60-79", "80+"),
+  col_visits = c("pat_id", "sex", "patbird", "prakid", "Hisnaam", "contact_id",
+    "contact_date", "Soepcode", "Contactsoort", "icpc"),
+  col_pats = c("pat_id", "sex", "pat_dob", "fu_end", "fu_start", "prak_id", "dereg_date")
 )
 }
 \arguments{
@@ -20,6 +23,29 @@ eligible contact types will be considered, based on the 'Contactsoort' variable.
 can access the list of eligible contact types by data("consult_contact")}
 
 \item{age_groups}{Definition of age groups stratification by age.}
+
+\item{col_visits}{Vector with the names of columns in the visits table in the order in which
+they occur in the table. Use the term below for select variables (on the left hand side is the
+original variable name, on the right hand side to one to be used):
+\itemize{
+\item pat: pat_id
+\item contactid: contact_id
+\item contactd: contact_date
+\item cod: ICPC
+}}
+
+\item{col_pats}{Vector with the names of columns in the patients table in the order in which
+they occur in the table. Use the term below for select variables (on the left hand side is the
+original variable name, on the right hand side to one to be used):
+\itemize{
+\item pat: pat_id
+\item Gender: sex
+\item patbird: pat_dob
+\item Datum_laatste_extractie: fu_end
+\item Inschrijfdatum: fu_start
+\item Praktijk_id: prak_id
+\item Uischrijfdatum: dereg_date
+}}
 }
 \description{
 Takes raw data from an sql output and format and clean it for further analysis This is the fist

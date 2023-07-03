@@ -1,11 +1,14 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # The zorgmijding package
 
 This package takes calculates and plots GP contact rate for
 cardiovascular complaints before and during the COVID-19 pandemic. It
-was developed specifically for the ZonMw 'Zorgmijding' project and works
+was developed specifically for the ZonMw ‘Zorgmijding’ project and works
 ONLY with data exported form GP registration databases managed by five
 University Medical Centres in the Netherlands (EMC Rotterdam, UMC
-Utrecht, UMC Amsterdam, UMC Mastricht and UMC Gronningen).
+Utrecht, UMC Amsterdam, UMC Maastricht and UMC Groningen).
 
 ## Using the package
 
@@ -13,8 +16,8 @@ There are four different functions in the package, covering the entire
 pipeline from cleaning the raw data to plotting the final results. Those
 function are:
 
-1.  `clean_data_v02` takes raw data in csv format and cleans it for further
-    analysis
+1.  `clean_data_v02` takes raw data in csv format and cleans it for
+    further analysis
 2.  `denominators` calculates the population size (ie. the number of
     patients in the database)
 3.  `n_visits` calculates the consultation rates in the pre-pandemic
@@ -28,53 +31,54 @@ functions and all functions (except `plot_visit`) store their output on
 your computer. For example, you can run the `n_visit` using the output
 form the `clean` and `denominators` that is stored on your computer.
 
-
 ## Installation
 
-Install the package  you first need to make sure the 'devtools' package is installed. 
-Then you can download and install the zorgmijding package.
+Install the package you first need to make sure the ‘devtools’ package
+is installed. Then you can download and install the zorgmijding package.
 
-```
+``` r
 if (!require(devtools)) install.packages(“devtools”)
 devtools::install_github("frenkxs/zorgmijding")
 ```
-If - for any reasons - this fails, install the package using a local file. In this case, you 
-have to save the 'tar.gz' file in your computer and then specify a path to the folder in which you
-saved it:
 
-```
+If - for any reasons - this fails, install the package using a local
+file. In this case, you have to save the ‘tar.gz’ file in your computer
+and then specify a path to the folder in which you saved it:
+
+``` r
 devtools::install_local("/path/to/folder/zorgmijding_0.0.0.9000.tar.gz", dependencies = TRUE)
 ```
 
 After installing, you load it into R:
 
-```
+``` r
 library(zorgmijding)
 ```
 
 ## Cleaning
 
-The `clean_data_v02` function takes raw data and format
-and cleans it for further analysis This is the fist function in this
-pipeline, it should be run first. It makes sure the variables are
-consistently named, are in the same order and have the right format. It
-also check there are no missing or nonsensical data.
+The `clean_data_v02` function takes raw data and format and cleans it
+for further analysis This is the fist function in this pipeline, it
+should be run first. It makes sure the variables are consistently named,
+are in the same order and have the right format. It also check there are
+no missing or nonsensical data.
 
 After running the function, you will be asked to provide two raw data
 files in the csv format: the one with GP contacts and one with all
-patients. The cleaned data are automatically saved in the 'results'
+patients. The cleaned data are automatically saved in the ‘results’
 folder created as a sub-folder in the folder in which the raw data are
 located.
 
-The function has two arguments. The first argument -umc - specifies the UMC that 
-provided the data; it can take the following values: "utrecht", "maastricht",
-"amsterdam", "groningen", "rotterdam". The second argument - clean_types - indicates
-whether the list of eligible contact types should be used when cleaning the data. 
-It only makes sense to use for data that does not come from Rotterdam, so when it's 
-set to TRUE and the umc is set to 'rotterdam', the it changes automatically to FALSE 
-with a warning message printed out. The default value is FALSE.  
+The function has two arguments. The first argument -umc - specifies the
+UMC that provided the data; it can take the following values: “utrecht”,
+“maastricht”, “amsterdam”, “groningen”, “rotterdam”. The second argument
+- clean_types - indicates whether the list of eligible contact types
+should be used when cleaning the data. It only makes sense to use for
+data that does not come from Rotterdam, so when it’s set to TRUE and the
+umc is set to ‘rotterdam’, the it changes automatically to FALSE with a
+warning message printed out. The default value is FALSE.
 
-```
+``` r
 clean_data(umc = "rotterdam")
 ```
 
@@ -84,7 +88,7 @@ The `denominators` function takes the cleaned patient data - saved by
 the `clean_data` function - to calculate the population size for each
 period - month, week and day - from 2016 to 2020. It does it for all
 patients, but also by age groups, by sex and by age and sex. The results
-are automatically saved in the results' folder created as a subfolder in
+are automatically saved in the results’ folder created as a subfolder in
 the folder in which the raw data are located.
 
 After runinng the function, you will be asked to provide the cleaned
@@ -95,7 +99,7 @@ The function has no arguments.
 **NOTE:** Running the function may take a while (up to several hours),
 depending on the size of your database.
 
-```
+``` r
 denominators()
 ```
 
@@ -119,39 +123,37 @@ observed values in 2020. If set to FALSE, then data for the entire
 period (2016-2020) is saved. If set to FALSE, the function `plot_visits`
 will not work.
 
-
+``` r
+n_visits(averages = TRUE)
 ```
-n_visits(averages = "TRUE")
-```
 
-The function returns the path to the RData file with the resulting data frames. 
-You can therefore use it as an input to the plotting function (see below). 
-(If the path is not defined, the function will ask the user to select the relevant 
-file.)
+The function returns the path to the RData file with the resulting data
+frames. You can therefore use it as an input to the plotting function
+(see below). (If the path is not defined, the function will ask the user
+to select the relevant file.)
 
-```
-path_to_res <- n_visits(averages = "TRUE")
+``` r
+path_to_res <- n_visits(averages = TRUE)
 
 plot_visits("Weekly rate of GP contacts for cardiovascular complaints by sex",
   stratum = "sex", periodicity = "w", segment = "full",
-  show_40plus = "TRUE", 
+  show_40plus = TRUE, 
   path = path_to_res)
 ```
-
 
 ## Plotting
 
 The function `plot_visits` plots the visit counts data, the output of
 the `n_visit` function. It only works when the the pre-pandemic averages
-are computed, ie. when the argument "averages" in the `n_visits`
-function was set to "TRUE"
+are computed, ie. when the argument “averages” in the `n_visits`
+function was set to “TRUE”
 
 There are several arguments that need to be specified: \* Title of the
-plot \* The stratification variable, possible values are 'sex', 'age',
-'sex_age', 'total' (the default). Plot by sex will be shown on one
+plot \* The stratification variable, possible values are ‘sex’, ‘age’,
+‘sex_age’, ‘total’ (the default). Plot by sex will be shown on one
 panel, plots by age will be faceted across multiple panels \* The period
-of counts, can either be daily, weekly or monthly. The values are 'd':
-day, 'w': week or 'm': month (the default). If plotting daily rate, it
+of counts, can either be daily, weekly or monthly. The values are ‘d’:
+day, ‘w’: week or ‘m’: month (the default). If plotting daily rate, it
 is highly recommended to \* Time period to be plotted. By default, the
 data are plotted for the entire year, with the pre-pandemic averages
 plotted against the 2020 data. If plotting daily data, it is recommended
@@ -161,15 +163,15 @@ for the entire population or only for patients of 40 years and older \*
 Path to the data to be plotted. Optional, if not provided you will be
 prompted to select the data via GUI after running the function.
 
-```
+``` r
 plot_visits("Weekly rate of GP contacts for cardiovascular complaints by sex",
   stratum = "sex", periodicity = "w", segment = "full",
-  show_40plus = "TRUE"
+  show_40plus = TRUE
 )
 
 plot_visits("Daily rate of GP contacts for cardiovascular complaints by age",
   stratum = "age", periodicity = "d",
   segment = c("2020-02-15", "2020-04-31"),
-  show_40plus = "TRUE"
+  show_40plus = TRUE
 )
 ```

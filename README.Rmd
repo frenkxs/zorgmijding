@@ -1,31 +1,23 @@
 ---
-title: "The zorgmijding package"
-author: "Premysl Velek"
-date: "12 february 2023"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{The zorgmijding package}
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  markdown: 
-    wrap: 72
+output: github_document
 ---
 
-```{r, include = FALSE}
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
-
+# The zorgmijding package
 
 This package takes calculates and plots GP contact rate for
 cardiovascular complaints before and during the COVID-19 pandemic. It
 was developed specifically for the ZonMw 'Zorgmijding' project and works
 ONLY with data exported form GP registration databases managed by five
 University Medical Centres in the Netherlands (EMC Rotterdam, UMC
-Utrecht, UMC Amsterdam, UMC Mastricht and UMC Gronningen).
+Utrecht, UMC Amsterdam, UMC Maastricht and UMC Groningen).
 
 ## Using the package
 
@@ -54,27 +46,23 @@ form the `clean` and `denominators` that is stored on your computer.
 Install the package  you first need to make sure the 'devtools' package is installed. 
 Then you can download and install the zorgmijding package.
 
-```{r load zorgmijding 1, eval = FALSE, include = TRUE}
-if(!require(devtools)) install.packages("devtools")
+```{r, eval = FALSE}
+if (!require(devtools)) install.packages(“devtools”)
 devtools::install_github("frenkxs/zorgmijding")
 ```
-
-
 If - for any reasons - this fails, install the package using a local file. In this case, you 
 have to save the 'tar.gz' file in your computer and then specify a path to the folder in which you
 saved it:
 
-```{r load zorgmijding 2, eval = FALSE, include = TRUE}
-if(!require(devtools)) install.packages("devtools")
+```{r, eval = FALSE}
 devtools::install_local("/path/to/folder/zorgmijding_0.0.0.9000.tar.gz", dependencies = TRUE)
 ```
 
 After installing, you load it into R:
 
-```{r load zorgmijding 3, eval = FALSE, include = TRUE}
+```{r, eval = FALSE}
 library(zorgmijding)
 ```
-
 
 ## Cleaning
 
@@ -98,8 +86,8 @@ It only makes sense to use for data that does not come from Rotterdam, so when i
 set to TRUE and the umc is set to 'rotterdam', the it changes automatically to FALSE 
 with a warning message printed out. The default value is FALSE.  
 
-```{r example clean, eval = FALSE, include = TRUE}
-clean_data_v02(umc = "rotterdam")
+```{r, eval = FALSE}
+clean_data(umc = "rotterdam")
 ```
 
 ## Calculating sample size
@@ -119,7 +107,7 @@ The function has no arguments.
 **NOTE:** Running the function may take a while (up to several hours),
 depending on the size of your database.
 
-```{r example denominators, eval = FALSE, include = TRUE}
+```{r, eval = FALSE}
 denominators()
 ```
 
@@ -144,7 +132,7 @@ period (2016-2020) is saved. If set to FALSE, the function `plot_visits`
 will not work.
 
 
-```{r example n_visits n 1, eval = FALSE, include = TRUE}
+```{r, eval = FALSE}
 n_visits(averages = TRUE)
 ```
 
@@ -153,14 +141,13 @@ You can therefore use it as an input to the plotting function (see below).
 (If the path is not defined, the function will ask the user to select the relevant 
 file.)
 
-```{r example n_visits n 2, eval = FALSE, include = TRUE}
-path_to_res <- n_visits(averages = "TRUE")
+```{r, eval = FALSE}
+path_to_res <- n_visits(averages = TRUE)
 
 plot_visits("Weekly rate of GP contacts for cardiovascular complaints by sex",
   stratum = "sex", periodicity = "w", segment = "full",
   show_40plus = TRUE, 
-  path = path_to_res
-)
+  path = path_to_res)
 ```
 
 
@@ -186,7 +173,7 @@ for the entire population or only for patients of 40 years and older \*
 Path to the data to be plotted. Optional, if not provided you will be
 prompted to select the data via GUI after running the function.
 
-```{r example plot_visits, eval = FALSE, include = TRUE}
+```{r, eval = FALSE}
 plot_visits("Weekly rate of GP contacts for cardiovascular complaints by sex",
   stratum = "sex", periodicity = "w", segment = "full",
   show_40plus = TRUE
