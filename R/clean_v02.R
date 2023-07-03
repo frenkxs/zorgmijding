@@ -65,12 +65,15 @@ clean_data_v02 <- function(umc = c(
                            ),
                            clean_types = FALSE,
                            age_groups = c("0-19", "20-39", "40-59", "60-79", "80+"),
-                           col_visits = c("pat_id", "sex", "patbird", "prakid", "Hisnaam",
-                                          "contact_id", "contact_date", "Soepcode",
-                                          "Contactsoort", "icpc"),
-                           col_pats = c("pat_id", "sex", "pat_dob", "fu_end", "fu_start",
-                               "prak_id", "dereg_date")
-                           ) {
+                           col_visits = c(
+                             "pat_id", "sex", "patbird", "prakid", "Hisnaam",
+                             "contact_id", "contact_date", "Soepcode",
+                             "Contactsoort", "icpc"
+                           ),
+                           col_pats = c(
+                             "pat_id", "sex", "pat_dob", "fu_end", "fu_start",
+                             "prak_id", "dereg_date"
+                           )) {
   # Preliminaries ---------------------------------------
   umc <- match.arg(umc)
 
@@ -121,7 +124,6 @@ clean_data_v02 <- function(umc = c(
   if (umc %in% c("utrecht", "maastricht", "amsterdam", "groningen")) {
     columns_patients <- col_pats
     columns_patients_select <- col_pats
-
   } else if (umc == "rotterdam") {
     columns_patients <- c(
       "prak_id", "pat_id", "pat_dob", "patdead", "sex",
@@ -206,7 +208,7 @@ clean_data_v02 <- function(umc = c(
     col_names = columns_patients,
     col_select = columns_patients_select,
     skip = 1,
-    col_types = cols(.default = "c")
+    col_types = vroom::cols(.default = "c")
   )
 
   # format columns
@@ -310,7 +312,7 @@ clean_data_v02 <- function(umc = c(
 
 
 # custom function to load large data in batches
- load_data <- function(path, column_names, column_select,
+load_data <- function(path, column_names, column_select,
                       with_contact_types) {
   # size of the batches
   batch_size <- 1e6
@@ -326,80 +328,93 @@ clean_data_v02 <- function(umc = c(
     skip = 1, n_max = batch_size,
     col_types = vroom::cols(.default = "c")
   ) %>%
-    # only consider cvd visits (ie ICPC code in K chapter)
-    dplyr::filter(grepl("K[0-9]{2}", icpc)) %>%
-    # record number of rows in the data after removing non-CVD contacts
-    structure("n_rows_cvd" = nrow(.)) %>%
-    # select only eligible contact types if with_contact_types is TRUE
-    dplyr::filter(if (with_contact_types) {
-      Contactsoort %in% consult_contact
-    } else {
-      TRUE
-    }) %>%
-    # remove duplicates within this first batch
-    dplyr::distinct(pat_id, contact_date, .keep_all = TRUE)
-
-  # sequence of row numbers where we split the data into batches
-  d <- seq(1, n_iterations * batch_size, by = batch_size)
-
-  # set counter to keep track of the number of iterations
-  counter <- 0
-
-  # count the total number of CVD contacts (rows), both eligible and ineligible
-  n_rows_cvd <- attributes(res)$n_rows_cvd
-
-  # now we read-in the batches one by one in a for loop. Since we've already read
-  # in the first batch, we can start from the second term in the sequence
-  for (i in d[-1]) {
-    from <- i
-    batch <- vroom::vroom(path,
-      col_names = column_names, col_select = column_select,
-      skip = from, n_max = batch_size,
-      show_col_types = FALSE,
-      col_types = cols(.default = "c")
-    ) %>%
       # record the number of original rows
       structure("n_rows_total" = nrow(.)) %>%
       # only consider cvd visits (ie ICPC code in K chapter)
       dplyr::filter(grepl("K[0-9]{2}", icpc)) %>%
-      # record the number of cvd only rows
-      structure("n_rows_cvd" = nrow(.))
-
-    # count the number of iterations and run garbage collector every third iteration
-    counter <- counter + 1
-    if (counter %% 3) gc(verbose = FALSE)
-
-    # keep track of all cvd rows across batches
-    n_rows_cvd <- n_rows_cvd + attributes(batch)$n_rows_cvd
-
-    #' check how many rows there are in the batch (before any filter are applied).
-    #' If less than the batch size, then we are at the end of the data and we can
-    #' step out of the loop at the end of this iteration. If it is completely empty,
-    #' we've read all the data in the previous iteration and we can step out of the loop now.
-    if (attributes(batch)$n_rows_total == 0) break
-
-    # remove duplicates within the batch
-    batch <- batch %>%
-      # first select only eligible contact types if with_contact_types is TRUE
+      # record number of rows in the data after removing non-CVD contacts
+      structure("n_rows_cvd" = nrow(.)) %>%
+      # select only eligible contact types if with_contact_types is TRUE
       dplyr::filter(if (with_contact_types) {
         Contactsoort %in% consult_contact
       } else {
-        TRUE
+         TRUE
       }) %>%
+      # remove duplicates within this first batch
       dplyr::distinct(pat_id, contact_date, .keep_all = TRUE)
 
-    res <- dplyr::bind_rows(res, dplyr::anti_join(batch, res,
-      by = join_by("pat_id", "contact_date")
-    ))
+  # check the number of rows in the first batch. If less than batch size,
+  # then we have all the data and can return them
+  if (attributes(res)$n_rows_total < batch_size) {
+      n_rows_cvd <- attributes(res)$n_rows_cvd
 
-    if (attributes(batch)$n_rows_total < batch_size) break
+  # if there the total number of row is not less than the batch size, we load the rest
+  # in batches
+      } else {
+
+      # sequence of row numbers where we split the data into batches
+      d <- seq(1, n_iterations * batch_size, by = batch_size)
+
+      # set counter to keep track of the number of iterations
+      counter <- 0
+
+      # count the total number of CVD contacts (rows), both eligible and ineligible
+      n_rows_cvd <- attributes(res)$n_rows_cvd
+
+      # now we read-in the batches one by one in a for loop. Since we've already read
+      # in the first batch, we can start from the second term in the sequence
+      for (i in d[-1]) {
+        from <- i
+        batch <- vroom::vroom(path,
+          col_names = column_names, col_select = column_select,
+          skip = from, n_max = batch_size,
+          show_col_types = FALSE,
+          col_types = cols(.default = "c")
+        ) %>%
+          # record the number of original rows
+          structure("n_rows_total" = nrow(.)) %>%
+          # only consider cvd visits (ie ICPC code in K chapter)
+          dplyr::filter(grepl("K[0-9]{2}", icpc)) %>%
+          # record the number of cvd only rows
+          structure("n_rows_cvd" = nrow(.))
+
+        # count the number of iterations and run garbage collector every third iteration
+        counter <- counter + 1
+        if (counter %% 3) gc(verbose = FALSE)
+
+        # keep track of all cvd rows across batches
+        n_rows_cvd <- n_rows_cvd + attributes(batch)$n_rows_cvd
+
+        #' check how many rows there are in the batch (before any filter are applied).
+        #' If less than the batch size, then we are at the end of the data and we can
+        #' step out of the loop at the end of this iteration. If it is completely empty,
+        #' we've read all the data in the previous iteration and we can step out of the loop now.
+        if (attributes(batch)$n_rows_total == 0) break
+
+        # remove duplicates within the batch
+        batch <- batch %>%
+          # first select only eligible contact types if with_contact_types is TRUE
+          dplyr::filter(if (with_contact_types) {
+            Contactsoort %in% consult_contact
+          } else {
+            TRUE
+          }) %>%
+          dplyr::distinct(pat_id, contact_date, .keep_all = TRUE)
+
+        res <- dplyr::bind_rows(res, dplyr::anti_join(batch, res,
+          by = join_by("pat_id", "contact_date")
+        ))
+
+        if (attributes(batch)$n_rows_total < batch_size) break
+      }
   }
+
   comment(res) <- strwrap(prefix = " ", initial = "", paste(
     "Originally there was ", n_rows_cvd, " rows. It was reduced to ", nrow(res),
     "(", round(nrow(res) / n_rows_cvd, 2) * 100, "%) after removing duplicates
     and ineligible contact types (if relevant).",
-    sep = "")
-    )
+    sep = ""
+  ))
   message(comment(res))
   res
 }
