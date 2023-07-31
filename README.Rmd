@@ -78,13 +78,14 @@ patients. The cleaned data are automatically saved in the 'results'
 folder created as a sub-folder in the folder in which the raw data are
 located.
 
-The function has two arguments. The first argument -umc - specifies the UMC that 
-provided the data; it can take the following values: "utrecht", "maastricht",
-"amsterdam", "groningen", "rotterdam". The second argument - clean_types - indicates
-whether the list of eligible contact types should be used when cleaning the data. 
-It only makes sense to use for data that does not come from Rotterdam, so when it's 
-set to TRUE and the umc is set to 'rotterdam', the it changes automatically to FALSE 
-with a warning message printed out. The default value is FALSE.  
+The function has two arguments:
+
+- umc: the UMC that provided the data; it can take the following values: "utrecht", "maastricht",
+"amsterdam", "groningen", "rotterdam".
+- clean_types: whether the list of eligible contact types should be used when cleaning the data. It
+only makes sense to use for data that does not come from Rotterdam, so when it's set to TRUE and the
+umc is set to 'rotterdam', the it changes automatically to FALSE with a warning message printed out.
+The default value is FALSE.
 
 ```{r, eval = FALSE}
 clean_data(umc = "rotterdam")
@@ -122,14 +123,14 @@ stratified by sex, age, sex and age and as a total number. You can also
 specify whether you want to see all data, or only data for patients 40
 and older. In total 18 different data frames are saved.
 
-The function has one argument averages an indicator whether a
-prepandemic averages should be computed. If set to TRUE (the default),
-then the output is a dataset in which there are two numbers for each
-period (month, week, day) in a year: one is the pre-pandemic average
-(2017-2019) weighted by the population size, and the other is the
-observed values in 2020. If set to FALSE, then data for the entire
-period (2016-2020) is saved. If set to FALSE, the function `plot_visits`
-will not work.
+The function has one argument: 
+
+- averages: an indicator whether a pre-pandemic averages should
+be computed. If set to TRUE (the default), then the output is a dataset in which there are two
+numbers for each period (month, week, day) in a year: one is the pre-pandemic average (2017-2019)
+weighted by the population size, and the other is the observed values in 2020. If set to FALSE, then
+data for the entire period (2016-2020) is saved. If set to FALSE, the function `plot_visits` will
+not work.
 
 
 ```{r, eval = FALSE}
@@ -158,20 +159,23 @@ the `n_visit` function. It only works when the the pre-pandemic averages
 are computed, ie. when the argument "averages" in the `n_visits`
 function was set to "TRUE"
 
-There are several arguments that need to be specified: \* Title of the
-plot \* The stratification variable, possible values are 'sex', 'age',
-'sex_age', 'total' (the default). Plot by sex will be shown on one
-panel, plots by age will be faceted across multiple panels \* The period
-of counts, can either be daily, weekly or monthly. The values are 'd':
-day, 'w': week or 'm': month (the default). If plotting daily rate, it
-is highly recommended to \* Time period to be plotted. By default, the
-data are plotted for the entire year, with the pre-pandemic averages
-plotted against the 2020 data. If plotting daily data, it is recommended
-to use shorter period. The period is specified by two dates: start and
-end date of the period to be plotted. \* Whether you want to plot data
-for the entire population or only for patients of 40 years and older \*
-Path to the data to be plotted. Optional, if not provided you will be
-prompted to select the data via GUI after running the function.
+There are several arguments that need to be specified:
+
+- title: title of the plot
+- stratum: The stratification variable, possible values are 'sex', 'age', 'sex_age', 'total' (the
+default). Plot by sex will be shown on one panel, plots by age will be faceted across multiple
+panels
+- periodicity: The period of counts, can either be daily, weekly or monthly. The values are 'd':
+day, 'w': week or 'm': month (the default). If plotting daily rate, it is highly recommended to
+restrict the time period to be plotted (see segment)
+- segment: the ime period to be plotted. By default, the data are plotted for the entire year, with
+the pre-pandemic averages plotted against the 2020 data. If plotting daily data, it is recommended
+to use shorter period. The period is specified in a vector with two dates: the start and end date of
+the period to be plotted. (e.g. segment = c("2020-02-15", "2020-04-31"))
+- show_40plus: whether you want to plot data for the entire population or only for patients of 40
+years and older
+- path: path to the data to be plotted. Optional, if not provided you will be prompted to select the
+data via GUI after running the function.
 
 ```{r, eval = FALSE}
 plot_visits("Weekly rate of GP contacts for cardiovascular complaints by sex",
