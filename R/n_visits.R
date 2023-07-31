@@ -22,18 +22,21 @@
 
 
 #' @param averages an indicator whether a prepandemic averages should be computed. If set to TRUE
-#' (the default), then the output is a dataset in which there are two numbers for each period
-#' (month, week, day) in a year: one is the pre-pandemic average (2017-2019), and the other is
-#' the observed values in 2020. If set to FALSE, then data for the entire period (2016-2020)
-#' is returned.
+#'   (the default), then the output is a dataset in which there are two numbers for each period
+#'   (month, week, day) in a year: one is the pre-pandemic average (2017-2019), and the other is the
+#'   observed values in 2020. If set to FALSE, then data for the entire period (2016-2020) is
+#'   returned.
 #' @param filename name of the file in which the results will be stored and saved
+#'
+#' @param remove_counts if set to TRUE (the default), the resulting dataframes will not contain the
+#'   absolute counts, only the rates will be returned
 #'
 #' @return list with paths to the resulting data
 
 #' @export
-n_visits <- function(averages = TRUE, filename = "results") {
-  if (!is.logical(averages)) {
-    stop("The argument 'averages' has to be either TRUE or FALSE")
+n_visits <- function(averages = TRUE, filename = "results", remove_counts = TRUE) {
+  if (!is.logical(averages) | !is.logical(remove_counts)) {
+    stop("The arguments 'averages' and 'remove_counts' have to be either TRUE or FALSE")
   }
 
 
@@ -133,6 +136,7 @@ n_visits <- function(averages = TRUE, filename = "results") {
   if (averages) {
     n_visits_w_sex_age <- n_visits_w_sex_age %>% calculate_avrg()
   }
+
 
   # day
   date <- date_day
@@ -316,6 +320,27 @@ n_visits <- function(averages = TRUE, filename = "results") {
   }
 
   path_results <- file.path(fs::path_dir(path_visits), "results", paste0(filename, ".RData"))
+
+  if (remove_counts) {
+      n_visits_m_sex_age <- n_visits_m_sex_age %>% dplyr::select(-n)
+      n_visits_w_sex_age <- n_visits_w_sex_age %>% dplyr::select(-n)
+      n_visits_d_sex_age <- n_visits_d_sex_age %>% dplyr::select(-n)
+      n_visits_m_age <- n_visits_m_age %>% dplyr::select(-n)
+      n_visits_w_age <- n_visits_w_age %>% dplyr::select(-n)
+      n_visits_d_age <- n_visits_d_age %>% dplyr::select(-n)
+      n_visits_m_sex <- n_visits_m_sex %>% dplyr::select(-n)
+      n_visits_w_sex <- n_visits_w_sex %>% dplyr::select(-n)
+      n_visits_d_sex <- n_visits_d_sex %>% dplyr::select(-n)
+      n_visits_m_sex_40 <- n_visits_m_sex_40 %>% dplyr::select(-n)
+      n_visits_w_sex_40 <- n_visits_w_sex_40 %>% dplyr::select(-n)
+      n_visits_d_sex_40 <- n_visits_d_sex_40 %>% dplyr::select(-n)
+      n_visits_m_total <- visits_m_total %>% dplyr::select(-n)
+      n_visits_w_total <- visits_w_total %>% dplyr::select(-n)
+      n_visits_d_total <- visits_d_total %>% dplyr::select(-n)
+      n_visits_m_total_40 <- n_visits_m_total_40 %>% dplyr::select(-n)
+      n_visits_w_total_40 <- n_visits_w_total_40 %>% dplyr::select(-n)
+      n_visits_d_total_40 <- n_visits_d_total_40 %>% dplyr::select(-n)
+  }
 
   # save cleaned data
   save(n_visits_m_sex_age,

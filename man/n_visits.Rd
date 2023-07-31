@@ -4,16 +4,19 @@
 \alias{n_visits}
 \title{n_visits}
 \usage{
-n_visits(averages = TRUE, filename = "results")
+n_visits(averages = TRUE, filename = "results", remove_counts = TRUE)
 }
 \arguments{
 \item{averages}{an indicator whether a prepandemic averages should be computed. If set to TRUE
 (the default), then the output is a dataset in which there are two numbers for each period
-(month, week, day) in a year: one is the pre-pandemic average (2017-2019), and the other is
-the observed values in 2020. If set to FALSE, then data for the entire period (2016-2020)
-is returned.}
+(month, week, day) in a year: one is the pre-pandemic average (2017-2019), and the other is the
+observed values in 2020. If set to FALSE, then data for the entire period (2016-2020) is
+returned.}
 
 \item{filename}{name of the file in which the results will be stored and saved}
+
+\item{remove_counts}{if set to TRUE (the default), the resulting dataframes will not contain the
+absolute counts, only the rates will be returned}
 }
 \value{
 list with paths to the resulting data
