@@ -116,7 +116,7 @@ stratified by sex, age, sex and age and as a total number. You can also
 specify whether you want to see all data, or only data for patients 40
 and older. In total 18 different data frames are saved.
 
-The function has one argument:
+The function has two arguments:
 
 -   averages: an indicator whether a pre-pandemic averages should be
     computed. If set to TRUE (the default), then the output is a dataset
@@ -125,9 +125,15 @@ The function has one argument:
     population size, and the other is the observed values in 2020. If
     set to FALSE, then data for the entire period (2016-2020) is saved.
     If set to FALSE, the function `plot_visits` will not work.
+-   remove_counts: if set to TRUE (the default), the resulting
+    dataframes will not contain the absolute counts; only the rates will
+    be returned.
+-   filename: a string with the name of the file in which the results
+    will be stored and saved (e.g “contact_rates”). The default value is
+    “results”.
 
 ``` r
-n_visits(averages = TRUE)
+n_visits(averages = TRUE, remove_counts = TRUE, filename = "contact_rates")
 ```
 
 The function returns the path to the RData file with the resulting data
