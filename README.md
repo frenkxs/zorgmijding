@@ -16,8 +16,8 @@ There are four different functions in the package, covering the entire
 pipeline from cleaning the raw data to plotting the final results. Those
 function are:
 
-1.  `clean_data_v02` takes raw data in csv format and cleans it for
-    further analysis
+1.  `clean_data` takes raw data in csv format and cleans it for further
+    analysis
 2.  `denominators` calculates the population size (ie. the number of
     patients in the database)
 3.  `n_visits` calculates the consultation rates in the pre-pandemic
@@ -57,11 +57,11 @@ library(zorgmijding)
 
 ## Cleaning
 
-The `clean_data_v02` function takes raw data and format and cleans it
-for further analysis This is the fist function in this pipeline, it
-should be run first. It makes sure the variables are consistently named,
-are in the same order and have the right format. It also check there are
-no missing or nonsensical data.
+The `clean_data` function takes raw data and format and cleans it for
+further analysis This is the fist function in this pipeline, it should
+be run first. It makes sure the variables are consistently named, are in
+the same order and have the right format. It also check there are no
+missing or nonsensical data.
 
 After running the function, you will be asked to provide two raw data
 files in the csv format: the one with GP contacts and one with all

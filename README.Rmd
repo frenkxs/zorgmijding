@@ -25,7 +25,7 @@ There are four different functions in the package, covering the entire
 pipeline from cleaning the raw data to plotting the final results. Those
 function are:
 
-1.  `clean_data_v02` takes raw data in csv format and cleans it for further
+1.  `clean_data` takes raw data in csv format and cleans it for further
     analysis
 2.  `denominators` calculates the population size (ie. the number of
     patients in the database)
@@ -66,7 +66,7 @@ library(zorgmijding)
 
 ## Cleaning
 
-The `clean_data_v02` function takes raw data and format
+The `clean_data` function takes raw data and format
 and cleans it for further analysis This is the fist function in this
 pipeline, it should be run first. It makes sure the variables are
 consistently named, are in the same order and have the right format. It
