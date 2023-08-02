@@ -59,14 +59,14 @@
 
 
 #' @export
-clean_data_v02 <- function(umc = c(
+clean_data <- function(umc = c(
                              "utrecht", "maastricht", "amsterdam",
                              "groningen", "rotterdam"
                            ),
                            clean_types = FALSE,
                            age_groups = c("0-19", "20-39", "40-59", "60-79", "80+"),
                            col_visits = c(
-                             "pat_id", "sex", "patbird", "prakid", "Hisnaam",
+                             "pat_id", "sex", "pat_dob", "prakid", "Hisnaam",
                              "contact_id", "contact_date", "Soepcode",
                              "Contactsoort", "icpc"
                            ),
@@ -107,15 +107,16 @@ clean_data_v02 <- function(umc = c(
     columns_visits <- col_visits
 
     columns_visits_select <- c(
-      "pat_id", "contact_id", "contact_date", "Contactsoort", "icpc"
+      "pat_id", "sex", "pat_dob", "contact_id", "contact_date",
+      "Contactsoort", "icpc"
     )
   } else if (umc == "rotterdam") {
     columns_visits <- c(
-      "prakid", "patbird", "patdead", "gender", "livenv", "socdep56",
+      "prakid", "pat_dob", "patdead", "sex", "livenv", "socdep56",
       "pat_id", "contact_date", "contact_id", "icpc"
     )
     columns_visits_select <- c(
-      "pat_id", "contact_id", "contact_date", "icpc"
+      "pat_id", "pat_dob", "sex", "contact_id", "contact_date", "icpc"
     )
   }
 
@@ -246,7 +247,6 @@ clean_data_v02 <- function(umc = c(
 
 
 
-  patients_to_join <- patients %>% dplyr::select(pat_id, sex, pat_dob, prak_id)
 
   # .-------------------------------------------------------------------------
   # Merge patient and visit data ---------------------------------------------
@@ -256,12 +256,13 @@ clean_data_v02 <- function(umc = c(
   br <- as.numeric(substring(age_groups, nchar(age_groups) - 1)[-length(age_groups)])
 
   visits <- visits %>%
-    dplyr::left_join(., patients_to_join, by = "pat_id") %>%
+
     # remove any patients from the visits table with missing data for DOB or sex
     dplyr::filter(
       !is.na(pat_dob),
       !is.na(sex)
     ) %>%
+
     dplyr::mutate(
       age = lubridate::interval(pat_dob, contact_date) / lubridate::years(1),
       age_g = factor(
