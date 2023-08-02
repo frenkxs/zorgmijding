@@ -167,13 +167,14 @@ clean_data <- function(umc = c(
   )
 
 
-  # select only relevant columns
   visits <- visits %>%
     # variable formatting
     dplyr::mutate(
       pat_id = factor(pat_id),
       contact_id = factor(contact_id),
       contact_date = anytime::anydate(contact_date),
+      pat_dob = anytime::anydate(pat_dob),
+      sex = factor(sex),
       icpc = as.character(icpc),
       month = lubridate::month(contact_date),
       year = lubridate::year(contact_date),
@@ -256,6 +257,11 @@ clean_data <- function(umc = c(
   br <- as.numeric(substring(age_groups, nchar(age_groups) - 1)[-length(age_groups)])
 
   visits <- visits %>%
+    # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
+    # data
+    mutate(sex = recode(sex,
+                        "1" = "Male", "2" = "Female",
+                        "M" = "Male", "V" = "Female")) %>%
 
     # remove any patients from the visits table with missing data for DOB or sex
     dplyr::filter(
