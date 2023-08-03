@@ -172,7 +172,7 @@ clean_data <- function(umc = c(
     dplyr::mutate(
       pat_id = factor(pat_id),
       contact_id = factor(contact_id),
-      contact_date = anytime::anydate(contact_date),
+      contact_date = anytime::anydate(contact_date, tz = "CET"),
       pat_dob = anytime::anydate(pat_dob),
       sex = factor(sex),
       icpc = as.character(icpc),
