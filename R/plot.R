@@ -130,7 +130,7 @@ plot_visits <- function(title = "This is a title",
     ggplot2::ylim(0, NA)
 
   formats <- list(
-    ggplot2::theme_minimal(base_size = 18),
+    ggplot2::theme_minimal(base_size = 16),
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)),
     colorspace::scale_color_discrete_sequential(palette = "Red-Blue", name = "")
   )
@@ -147,13 +147,13 @@ plot_visits <- function(title = "This is a title",
     add_on <- list(
       ggplot2::geom_line(ggplot2::aes(color = prepan, group = prepan), linewidth = line_size),
       ggplot2::geom_point(ggplot2::aes(color = prepan, group = prepan), size = point_size),
-      ggplot2::facet_wrap(~age_g, ncol = 3)
+      ggplot2::facet_wrap(~ age_g, ncol = 3)
     )
   } else if (stratum == "sex" | stratum == "sex_40") {
     add_on <- list(
       ggplot2::geom_line(ggplot2::aes(color = prepan, group = prepan), linewidth = line_size),
       ggplot2::geom_point(ggplot2::aes(color = prepan, group = prepan), size = point_size),
-      ggplot2::facet_wrap(~sex, ncol = 2)
+      ggplot2::facet_wrap(~ sex, ncol = 2)
     )
   } else {
     add_on <- list(
