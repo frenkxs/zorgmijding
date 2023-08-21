@@ -259,9 +259,15 @@ clean_data <- function(umc = c(
   visits <- visits %>%
     # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
     # data
-    mutate(sex = recode(sex,
-                        "1" = "Male", "2" = "Female",
-                        "M" = "Male", "V" = "Female")) %>%
+    mutate(sex = case_match(sex,
+                        "1" = "Male",
+                        "2" = "Female",
+
+                        "M" = "Male",
+                        "V" = "Female",
+
+                        .default = NA),
+           sex = factor(sex)) %>%
 
     # remove any patients from the visits table with missing data for DOB or sex
     dplyr::filter(
