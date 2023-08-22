@@ -246,9 +246,6 @@ clean_data <- function(umc = c(
       !is.na(sex)
     )
 
-
-
-
   # .-------------------------------------------------------------------------
   # Merge patient and visit data ---------------------------------------------
   # .-------------------------------------------------------------------------
@@ -259,12 +256,12 @@ clean_data <- function(umc = c(
   visits <- visits %>%
     # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
     # data
-    mutate(sex = case_match(sex,
-                        "1" = "Male",
-                        "2" = "Female",
+    dplyr::mutate(sex = dplyr::case_match(sex,
+                        "1" ~ "Male",
+                        "2" ~ "Female",
 
-                        "M" = "Male",
-                        "V" = "Female",
+                        "M" ~ "Male",
+                        "V" ~ "Female",
 
                         .default = NA),
            sex = factor(sex)) %>%
