@@ -183,7 +183,7 @@ clean_data <- function(umc = c(
 
         # Intercity
         sex == "M" ~ "Male",
-        sex == "V" ~ "Female"
+        sex == "V" ~ "Female",
 
         # Loose ends, mainly for testing purposes
         sex == "male" ~ "Male",
