@@ -56,7 +56,14 @@
 #' - Inschrijfdatum: fu_start
 #' - Praktijk_id: prak_id
 #' - Uischrijfdatum: dereg_date
-
+#'
+#' @param batch the visit table is loaded in batches to prevent any memory issues when loading large
+#' files. This argument defines the size of the batch. The default is 1 million rows, lower values
+#' require less memory.
+#'
+#' @param iterations number of iterations when loading the visit table; I.e. number of times a
+#' new batch is loaded. The total number of rows in the visits table need to be lower than
+#' batch * iterations to make sure the complete data is loaded. The default value is 50
 
 #' @export
 clean_data <- function(umc = c(
@@ -73,7 +80,9 @@ clean_data <- function(umc = c(
                            col_pats = c(
                              "pat_id", "sex", "pat_dob", "fu_end", "fu_start",
                              "prak_id", "dereg_date"
-                           )) {
+                           ),
+                           batch = 1e6,
+                           iterations = 50) {
   # Preliminaries ---------------------------------------
   umc <- match.arg(umc)
 
@@ -163,7 +172,9 @@ clean_data <- function(umc = c(
     path = path_visits,
     column_names = columns_visits,
     column_select = columns_visits_select,
-    with_contact_types = clean_types
+    with_contact_types = clean_types,
+    batchsize = batch,
+    niterations = iterations
   )
 
 
@@ -266,7 +277,7 @@ clean_data <- function(umc = c(
   if (umc != "rotterdam") {
     patients <- patients %>%
       dplyr::mutate(dereg_date = anytime::anydate(dereg_date)) %>%
-      # follow up end is either date of de-registration or date of the last extraction (whichever came first)
+# follow up end is either date of de-registration or date of the last extraction (whichever came first)
       dplyr::mutate(
         fu_end = pmin(fu_end, dereg_date, na.rm = TRUE),
         sex = factor(sex, levels = c("M", "V"), labels = c("Male", "Female"))
@@ -351,12 +362,12 @@ clean_data <- function(umc = c(
 
 # custom function to load large data in batches
 load_data <- function(path, column_names, column_select,
-                      with_contact_types) {
+                      with_contact_types, batchsize, niterations) {
   # size of the batches
-  batch_size <- 1e6
+  batch_size <- batchsize
 
   # number of iterations. it should be large enough to make sure we get the entire data
-  n_iterations <- 50
+  n_iterations <- niterations
 
   data("consult_contact")
 
