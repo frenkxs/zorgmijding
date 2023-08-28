@@ -175,7 +175,8 @@ clean_data <- function(umc = c(
       contact_date = anytime::anydate(contact_date, tz = "CET"),
       pat_dob = anytime::anydate(pat_dob),
 
-      # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
+
+     # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
       sex = dplyr::case_when(
           # IPCI/RG
           sex == "1" ~ "Male",
@@ -192,6 +193,25 @@ clean_data <- function(umc = c(
           sex == "female" ~ "Female",
 
           .default = NA),
+
+      # recode sex variable based on common usage in intercity and IPCI
+      sex = dplyr::case_when(
+        #IPCI / RG
+        sex == "1" ~ "Male",
+        sex == "2" ~ "Female",
+
+        # Intercity
+        sex == "M" ~ "Male",
+        sex == "V" ~ "Female",
+
+        # Loose ends, mainly for testing purposes
+        sex == "male" ~ "Male",
+        sex == "female" ~ "Female",
+        sex == "Male" ~ "Male",
+        sex == "Female" ~ "Female",
+
+        .default = NA),
+
 
       sex = factor(sex),
       icpc = as.character(icpc),
@@ -279,6 +299,7 @@ clean_data <- function(umc = c(
       !is.na(sex)
     ) %>%
 
+    # age brackets
     dplyr::mutate(
       age = lubridate::interval(pat_dob, contact_date) / lubridate::years(1),
       age_g = factor(
