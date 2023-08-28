@@ -134,6 +134,7 @@ The function has two arguments:
 
 ``` r
 n_visits(averages = TRUE, remove_counts = TRUE, filename = "contact_rates")
+n_visits(averages = FALSE, remove_counts = TRUE, filename = "contact_rates_long")
 ```
 
 The function returns the path to the RData file with the resulting data
@@ -179,15 +180,105 @@ There are several arguments that need to be specified:
     will be prompted to select the data via GUI after running the
     function.
 
-``` r
-plot_visits("Weekly rate of GP contacts for cardiovascular complaints by sex",
-  stratum = "sex", periodicity = "w", segment = "full",
-  show_40plus = TRUE
-)
+Here’s a series of plots to make to visually inspect the data. The plots
+will be automatically saved to the ‘results’ folder (the same folder to
+which the data are saved)
 
-plot_visits("Daily rate of GP contacts for cardiovascular complaints by age",
-  stratum = "age", periodicity = "d",
-  segment = c("2020-02-15", "2020-04-31"),
-  show_40plus = TRUE
-)
+``` r
+# Replace with your region (e.g. "Maastricht", "Utrecht", ...)
+region <- "Amsterdam"
+plus40 <- TRUE
+
+path_data <- n_visits(averages = TRUE)
+
+# save the image to the same folder which stores the data
+folder <- paste0(substr(path_data, 1, nchar(path_data) - 13))
+
+
+# Daily by sex
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "sex", periodicity = "d", segment = c("2020-02-20", "2020-04-30"),
+            show_40plus = plus40,
+            path = path_data) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "daily_sex.png"), width = 2000, height = 1500, units = "px")
+
+# Daily by sex and age
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "sex_age", periodicity = "d", segment = c("2020-02-20", "2020-04-30"),
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "daily_sex_age.png"), width = 2000, height = 1500, units = "px")
+
+# Daily total
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "total", periodicity = "d", segment = c("2020-02-20", "2020-04-30"),
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "daily_total.png"), width = 2000, height = 1500, units = "px")
+
+# -----------------------------------
+
+# Weekly by sex
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "sex", periodicity = "w",
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "weekly_sex.png"), width = 2000, height = 1500, units = "px")
+
+# Weekly by sex and age
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "sex_age", periodicity = "w",
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "weekly_age_sex.png"), width = 2000, height = 1500, units = "px")
+
+# Weekly total
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "total", periodicity = "w",
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "weekly_total.png"), width = 2000, height = 1500, units = "px")
+
+# -----------------------------------
+
+# Monthly by sex
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "sex", periodicity = "m",
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "monthly_sex.png"), width = 2000, height = 1500, units = "px")
+
+
+# # Monthly by sex and age
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "sex_age", periodicity = "m",
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "monthly_age_sex.png"), width = 2000, height = 1500, units = "px")
+
+
+# # Monthly total
+plot_visits("Daily rate of GP contacts for cardiovascular complaints",
+            stratum = "total", periodicity = "m",
+            show_40plus = plus40,
+            path = path) +
+  labs(subtitle = region)
+
+ggsave(paste0(folder, "monthly_total.png"), width = 2000, height = 1500, units = "px")
 ```

@@ -174,6 +174,25 @@ clean_data <- function(umc = c(
       contact_id = factor(contact_id),
       contact_date = anytime::anydate(contact_date, tz = "CET"),
       pat_dob = anytime::anydate(pat_dob),
+
+      # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
+      sex = dplyr::case_when(
+          # IPCI/RG
+          sex == "1" ~ "Male",
+          sex == "2" ~ "Female",
+
+          # Intercity
+          sex == "M" ~ "Male",
+          sex == "V" ~ "Female",
+
+          # loose ends,mainly for testing purposes
+          sex == "Male" ~ "Male",
+          sex == "Female" ~ "Female",
+          sex == "male" ~ "Male",
+          sex == "female" ~ "Female",
+
+          .default = NA),
+
       sex = factor(sex),
       icpc = as.character(icpc),
       month = lubridate::month(contact_date),
@@ -253,20 +272,8 @@ clean_data <- function(umc = c(
   # get breaks from the user defined age groups
   br <- as.numeric(substring(age_groups, nchar(age_groups) - 1)[-length(age_groups)])
 
+  # remove any patients from the visits table with missing data for DOB or sex
   visits <- visits %>%
-    # Recode the sex variable. One set of values is for Intercity databases, the other for Rotterdam
-    # data
-    dplyr::mutate(sex = dplyr::case_match(sex,
-                        "1" ~ "Male",
-                        "2" ~ "Female",
-
-                        "M" ~ "Male",
-                        "V" ~ "Female",
-
-                        .default = NA),
-           sex = factor(sex)) %>%
-
-    # remove any patients from the visits table with missing data for DOB or sex
     dplyr::filter(
       !is.na(pat_dob),
       !is.na(sex)
