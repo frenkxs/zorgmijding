@@ -37,7 +37,7 @@ Install the package you first need to make sure the ‘devtools’ package
 is installed. Then you can download and install the zorgmijding package.
 
 ``` r
-if (!require(devtools)) install.packages(“devtools”)
+if (!require(devtools)) install.packages("devtools")
 devtools::install_github("frenkxs/zorgmijding")
 ```
 
