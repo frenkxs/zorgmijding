@@ -10,7 +10,9 @@ clean_data(
   age_groups = c("0-19", "20-39", "40-59", "60-79", "80+"),
   col_visits = c("pat_id", "sex", "pat_dob", "prakid", "Hisnaam", "contact_id",
     "contact_date", "Soepcode", "Contactsoort", "icpc"),
-  col_pats = c("pat_id", "sex", "pat_dob", "fu_end", "fu_start", "prak_id", "dereg_date")
+  col_pats = c("pat_id", "sex", "pat_dob", "fu_end", "fu_start", "prak_id", "dereg_date"),
+  batch = 1e+06,
+  iterations = 50
 )
 }
 \arguments{
@@ -46,6 +48,14 @@ original variable name, on the right hand side to one to be used):
 \item Praktijk_id: prak_id
 \item Uischrijfdatum: dereg_date
 }}
+
+\item{batch}{the visit table is loaded in batches to prevent any memory issues when loading large
+files. This argument defines the size of the batch. The default is 1 million rows, lower values
+require less memory.}
+
+\item{iterations}{number of iterations when loading the visit table; I.e. number of times a
+new batch is loaded. The total number of rows in the visits table need to be lower than
+batch * iterations to make sure the complete data is loaded. The default value is 50}
 }
 \description{
 Takes raw data from an sql output and format and clean it for further analysis This is the fist

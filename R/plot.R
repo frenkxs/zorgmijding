@@ -99,18 +99,24 @@ plot_visits <- function(title = "This is a title",
       options(warn = 0)
     }
 
+
+
   if (segment[1] != "full") {
     seg_limits <- lubridate::ymd(segment)
   } else if (segment[1] == "full" & periodicity == "w") {
     # since the first and last weeks are not directly comparable due to different lengths
     # in different years, they will not be plotted. In this case we select the second
     # minimum and maximum value among the available dates
+
+    # we also want to remove any dates later than 2020
+    temp_max <- res$year_date[lubridate::year(res$year_date) < 2021]
+
     seg_limits <- c(
       min(res$year_date[res$year_date != min(res$year_date)]),
-      max(res$year_date[res$year_date != max(res$year_date)])
+      max(temp_max[temp_max != max(temp_max)])
     )
   } else {
-    seg_limits <- c(min(res$year_date), max(res$year_date))
+    seg_limits <- c(min(res$year_date), max(temp_max))
   }
 
   x_breaks <- dplyr::case_when(

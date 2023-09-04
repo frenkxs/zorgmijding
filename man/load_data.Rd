@@ -7,7 +7,14 @@ If less than the batch size, then we are at the end of the data and we can
 step out of the loop at the end of this iteration. If it is completely empty,
 we've read all the data in the previous iteration and we can step out of the loop now.}
 \usage{
-load_data(path, column_names, column_select, with_contact_types)
+load_data(
+  path,
+  column_names,
+  column_select,
+  with_contact_types,
+  batchsize,
+  niterations
+)
 }
 \description{
 check how many rows there are in the batch (before any filter are applied).

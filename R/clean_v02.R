@@ -451,7 +451,7 @@ load_data <- function(path, column_names, column_select,
           dplyr::distinct(pat_id, contact_date, .keep_all = TRUE)
 
         res <- dplyr::bind_rows(res, dplyr::anti_join(batch, res,
-          by = join_by("pat_id", "contact_date")
+          by = dplyr::join_by("pat_id", "contact_date")
         ))
 
         if (attributes(batch)$n_rows_total < batch_size) break
