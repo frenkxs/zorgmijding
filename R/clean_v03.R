@@ -168,7 +168,7 @@ clean_data_at_once <- function(
 
   if(method == "vroom") {
       visits <- vroom::vroom(
-          file = path_patients,
+          file = path_visits,
           col_names = columns_visits,
           col_select = columns_visits_select,
           skip = 1,
@@ -176,7 +176,7 @@ clean_data_at_once <- function(
   )
   } else {
       visits <- readr::read_csv(
-          file = path_patients,
+          file = path_visits,
           col_names = columns_visits,
           col_select = columns_visits_select,
           skip = 1,
