@@ -14,7 +14,7 @@
 #' named in the same order and have the right format. It also check there are no missing or
 #' nonsensical data. It ask the user to provide two raw data files: the one with GP contacts and
 #' one with all patients. The cleaned data are automatically saved in the 'results' folder created
-#' as a subfolder in the folder in which the raw data are loca ted.
+#' as a subfolder in the folder in which the raw data are located.
 
 
 #' @importFrom svDialogs dlg_message
@@ -22,11 +22,10 @@
 #' @importFrom fs path_dir
 #' @importFrom magrittr "%>%"
 #' @importFrom anytime anydate
+#' @importFrom readr read_csv
 #' @import lubridate
 #' @import dplyr
 #' @import vroom
-#' @import readr read_csv
-
 
 #' @param umc University medical centre that provides the data. It can take the
 #' the following values: "utrecht", "maastricht", "amsterdam", "groningen", "rotterdam"
