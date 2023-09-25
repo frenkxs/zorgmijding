@@ -56,8 +56,8 @@
 #' - Inschrijfdatum: fu_start
 #' - Praktijk_id: prak_id
 #' - Uischrijfdatum: dereg_date
-#' @method Method to read in the data, can be either vroom or read_csv
 
+#' @method Method to read in the data, can be either vroom or read_csv
 
 #' @export
 clean_data_at_once <- function(
