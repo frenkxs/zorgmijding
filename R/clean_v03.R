@@ -22,10 +22,17 @@
 #' @importFrom fs path_dir
 #' @importFrom magrittr "%>%"
 #' @importFrom anytime anydate
+<<<<<<< HEAD
 #' @import lubridate
 #' @import dplyr
 #' @import vroom
 #' @import readr read_csv
+=======
+#' @importFrom readr read_csv
+#' @import lubridate
+#' @import dplyr
+#' @import vroom
+>>>>>>> 00d285a08bf94e97d7b6df08bbc540cda0f292d0
 
 
 #' @param umc University medical centre that provides the data. It can take the
