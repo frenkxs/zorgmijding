@@ -7,7 +7,7 @@
 # For all questions contact Premysl Velek at p.velek@erasmusmc.nl
 
 
-#' clean_data
+#' clean_data_at_once
 #'
 #' Takes raw data from an sql output and format and clean it for further analysis This is the fist
 #' function in this pipeline, it should be run first. It makes sure the variables are consistently
@@ -57,7 +57,7 @@
 #' - Praktijk_id: prak_id
 #' - Uischrijfdatum: dereg_date
 
-#' @method Method to read in the data, can be either vroom or read_csv
+#' @param method Method to read in the data, can be either vroom or read_csv
 
 #' @export
 clean_data_at_once <- function(
