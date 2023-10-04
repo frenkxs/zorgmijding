@@ -174,7 +174,7 @@ clean_data_at_once <- function(
           col_types = vroom::cols(.default = "c")
   )
   } else {
-      visits <- readr::read_csv(
+      visits <- readr::read_csv2(
           file = path_visits,
           col_names = columns_visits,
           col_select = columns_visits_select,
