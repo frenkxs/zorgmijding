@@ -99,6 +99,8 @@ plot_visits <- function(title = "This is a title",
       options(warn = 0)
     }
 
+  # we want to remove any dates later than 2020
+  temp_max <- res$year_date[lubridate::year(res$year_date) < 2021]
 
 
   if (segment[1] != "full") {
@@ -107,9 +109,6 @@ plot_visits <- function(title = "This is a title",
     # since the first and last weeks are not directly comparable due to different lengths
     # in different years, they will not be plotted. In this case we select the second
     # minimum and maximum value among the available dates
-
-    # we also want to remove any dates later than 2020
-    temp_max <- res$year_date[lubridate::year(res$year_date) < 2021]
 
     seg_limits <- c(
       min(res$year_date[res$year_date != min(res$year_date)]),
